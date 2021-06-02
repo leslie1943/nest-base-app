@@ -1,18 +1,36 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CatsController } from './cats.controller';
+import { CatService } from './cats.service';
 
 describe('CatsController', () => {
   let controller: CatsController;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const app: TestingModule = await Test.createTestingModule({
       controllers: [CatsController],
+      providers: [CatService],
     }).compile();
 
-    controller = module.get<CatsController>(CatsController);
+    controller = app.get<CatsController>(CatsController);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  describe('root', () => {
+    it('findAll case', () => {
+      expect(controller.findAll()).toBe('GET ALL CATS');
+    });
+
+    it('findCats case', () => {
+      expect(controller.findCats()).toBe('GET ALL CATS');
+    });
+
+    it('findOne case', () => {
+      expect(controller.findOne('tom')).toBe(
+        'this action returns cat which id is tom',
+      );
+    });
+
+    it('query case', () => {
+      expect(controller.queryCat('tom')).toBe('this return tom');
+    });
   });
 });
