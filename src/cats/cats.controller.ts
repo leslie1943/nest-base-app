@@ -1,78 +1,61 @@
 import {
   Controller,
   Get,
-  HttpCode,
-  Param,
   Query,
   Post,
-  Req,
-  Request,
+  Body,
+  Put,
+  Param,
   Delete,
 } from '@nestjs/common';
+import { Cat } from 'src/cats/interfaces/cat.interface';
 
+import {
+  CreateCatDto,
+  UpdateCatDto,
+  ListAllEntities,
+} from './dto/create-cat.dto';
 import { CatService } from './cats.service';
 
-type Cat = {
-  name: string;
-  id: number;
-};
-
-/**
- * In that case, we could specify the path prefix customers in the @Controller() decorator
- * so that we don't have to repeat that portion of the path for each route in the file.
- */
-@Controller('cats') // prefix, could be any words
+@Controller('cats')
 export class CatsController {
-  constructor(private readonly catService: CatService) {}
-  // the default route is [/prefix] if not specify route path
+  /**
+   * CatsService 是通过类构造函数注入的,注意这里使用了私有的只读语法
+   * 这意味着我们已经在同一位置创建并初始化了 catsService 成员
+   * 构造函数会根据传递的类型去 `app.module.ts` 中的 providers 里面 找到对应的 类型 然后初始化 this
+   */
+  constructor(private readonly catsService: CatService) {}
+
+  @Post()
+  async create(@Body() createDto: CreateCatDto): Promise<void> {
+    console.info(createDto);
+    this.catsService.create(createDto);
+  }
+
   @Get()
-  findAll(): string {
-    return this.catService.findAll();
-  }
-
-  // the route will be /prefix/specific-path if specify route path
-  @Get('all')
-  findCats(): string {
-    return this.catService.findCats();
-  }
-
-  @Get('t*t')
-  findWild(@Req() req: Request): string {
-    return `this return ${req.url} `;
-  }
-
-  // @Query修饰的参数是 某个修饰器定义 url 后 带的 /query?name=222
-  @Get('query')
-  queryCat(@Query('name') name: string): string {
-    return `this return ${name}`;
+  async findAll(@Query() query: ListAllEntities): Promise<Cat[]> {
+    console.info(query);
+    return this.catsService.findCats();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): string {
-    console.info('id:', id);
-    return `this action returns cat which id is ${id}`;
+  async findOne(@Param('id') id: string): Promise<string> {
+    console.info(id);
+    return id;
   }
 
-  @Get('/findCatById/:id')
-  findByCatId(@Param('id') id: number): Cat {
-    return {
-      id,
-      name: 'Tom',
-    };
-  }
-
-  @Post()
-  @HttpCode(202)
-  create(): string {
-    return 'this action adds a new cat';
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateInfo: UpdateCatDto,
+  ): Promise<UpdateCatDto> {
+    console.info(id);
+    console.info(updateInfo);
+    return updateInfo;
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string): string {
-    return `item ${id} this  has been deleted!`;
+  async remove(@Param('id') id: string): Promise<void> {
+    console.info(id);
   }
-
-  /**
-   * 使用 @ 修识符的方法参数为 url 的形式和参数
-   */
 }

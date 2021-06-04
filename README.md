@@ -1,73 +1,50 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+### main.ts
+- 应用程序的入口文件,它使用核心函数 NestFactory 来创建 Nest 应用程序的实例.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+### app.module.ts
+- T应用程序的根模块（root module）
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+### controller.ts
+- Controllers are responsible for handling incoming requests and returning responses to the client.
 
-```bash
-$ npm install
+### decorators
+- For example, a path prefix of customers combined with the decorator @Get('profile') would produce a route mapping for requests like GET /customers/profile.
+```ts
+// @@filename(cats.controller)
+import { Controller, Get } from '@nestjs/common';
+
+@Controller('cats')
+export class CatsController {
+  @Get() // ====> /cats
+  findAll() {
+    return 'This action returns all cats';
+  }
+  @Get('profile')  // ====> /cats/profile
+  findProfile() {
+    return 'This action returns all cats';
+  }
+}
 ```
 
-## Running the app
+### DTO
+- data transfer object: 数据传输对象
 
-```bash
-# development
-$ npm run start
 
-# watch mode
-$ npm run start:dev
+### last step
+- 控制器已经准备就绪, 可以使用, 但是 Nest 依然不知道 CatsController 是否存在, 所以它不会创建这个类的一个实例
+- 控制器总是属于模块, 这就是为什么我们在 @Module() 装饰器中包含 controllers 数组的原因. 由于除了根模块 AppModule之外, 我们还没有定义其他模块, 所以我们将使用它来介绍 CatsController
 
-# production mode
-$ npm run start:prod
-```
 
-## Test
+### 依赖注入
+- 具体某个 `Controller` 的 `构造函数` 会根据传递的`类的类型`去 `app.module.ts` 中的 `providers` 里面 找到对应的 类型 然后初始化 自身的`this`
 
-```bash
-# unit tests
-$ npm run test
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+### dto vs interface
+ * 在 contoller 中进行 service 调用的时候
+ * 如果涉及到参数的传递, 那么 dto class 和  interface 是可以互通的
+ * 但前提是:
+ *  controller中 传递的参数的dto类型 要满足
+ *  service中方法的参数类型
