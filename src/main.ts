@@ -5,6 +5,7 @@
 import { NestFactory } from '@nestjs/core';
 // import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
+import { logger } from './middlewares/logger.middleware';
 
 // 引导应用程序的启动过程
 async function bootstrap() {
@@ -15,6 +16,7 @@ async function bootstrap() {
   // 默认情况下使用 @nestjs/platform-express 软件包。许多用户对 Express 都很满意，并且无需采取任何操作即可启用它
   // const app = await NestFactory.create<NestExpressApplication>(AppModule); //
   const app = await NestFactory.create(AppModule);
+  app.use(logger);
   // 我们仅启动了 HTTP 侦听器, 该侦听器使应用程序可以侦听入栈的 HTTP 请求
   await app.listen(3000);
 }
