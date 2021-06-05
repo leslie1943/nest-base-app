@@ -1,20 +1,33 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { HelloController } from './hello/hello.controller';
 import { HelloService } from './hello/hello.service';
-import { CatService } from './cats/cats.service';
-import { CatsController } from './cats/un-cats.controller';
-
+import { CatsModule } from './cats/cats.module';
+import { LoggerMiddleware } from './middlewares/looger.middleware';
+import { TimerMiddleware } from './middlewares/timer.middleware';
+// import { logger } from './middlewares/logger.middleware';
 @Module({
-  imports: [],
-  controllers: [HelloController, CatsController],
-  /**
-    现在我们已经定义了提供者(CatsService)
-    并且已经有了该服务的使用者(CatsController)
-    我们需要在 Nest 中注册该服务
-    以便它可以执行注入. 为此
-    我们可以编辑模块文件(app.module.ts)
-    然后将服务添加到@Module()装饰器的 providers 数组中.
-   */
-  providers: [HelloService, CatService],
+  imports: [CatsModule],
+  controllers: [HelloController /** CatsController */],
+  providers: [HelloService /**CatService */],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  async configure(consumer: MiddlewareConsumer) {
+    // logger has been binded in global scope.
+    consumer
+      .apply(LoggerMiddleware, TimerMiddleware /**logger */)
+      .forRoutes('');
+    // .forRoutes({ path: 'cats', method: RequestMethod.GET });
+    // .forRoutes('cats');
+    // .forRoutes({ path: 'ab*cd', method: RequestMethod.ALL });
+    // .apply(LoggerMiddleware).forRoutes(CatsController);
+    /**
+     * .apply(LoggerMiddleware)
+       .exclude(
+          { path: 'cats', method: RequestMethod.GET },
+          { path: 'cats', method: RequestMethod.POST },
+          'cats/(.*)',
+        )
+        .forRoutes(CatsController);
+     */
+  }
+}

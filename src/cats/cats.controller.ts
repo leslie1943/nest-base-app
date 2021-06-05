@@ -15,7 +15,7 @@ import {
   UpdateCatDto,
   ListAllEntities,
 } from './dto/create-cat.dto';
-import { CatService } from './cats.service';
+import { CatsService } from './cats.service';
 
 @Controller('cats')
 export class CatsController {
@@ -24,7 +24,7 @@ export class CatsController {
    * 这意味着我们已经在同一位置创建并初始化了 catsService 成员
    * 构造函数会根据传递的类型去 `app.module.ts` 中的 providers 里面 找到对应的 类型 然后初始化 this
    */
-  constructor(private readonly catsService: CatService) {}
+  constructor(private readonly catsService: CatsService) {}
 
   @Post()
   async create(@Body() createDto: CreateCatDto): Promise<void> {
@@ -44,14 +44,14 @@ export class CatsController {
     return id;
   }
 
-  @Put(':id')
+  @Put(':name')
   async update(
-    @Param('id') id: string,
+    @Param('name') name: string,
     @Body() updateInfo: UpdateCatDto,
-  ): Promise<UpdateCatDto> {
-    console.info(id);
+  ): Promise<void> {
+    console.info(name);
     console.info(updateInfo);
-    return updateInfo;
+    return this.catsService.update(name, updateInfo);
   }
 
   @Delete(':id')

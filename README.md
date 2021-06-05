@@ -48,3 +48,61 @@ export class CatsController {
  * 但前提是:
  *  controller中 传递的参数的dto类型 要满足
  *  service中方法的参数类型
+
+
+### module
+- 其实就是把 controller 和 server 单独写到一个模块
+```ts
+import { Module } from '@nestjs/common';
+import { CatsController } from './cats.controller';
+import { CatService } from './cats.service';
+@Module({
+  controllers: [CatsController],
+  providers: [CatService],
+})
+export class CatsModule {}
+```
+- 然后在 `app.module.ts`中引入, 然后再加入到 `imports`的数组中
+```ts
+import { Module } from '@nestjs/common';
+import { HelloController } from './hello/hello.controller';
+import { HelloService } from './hello/hello.service';
+import { CatsModule } from './cats/cats.module';
+@Module({
+  imports: [CatsModule],
+  controllers: [HelloController /** CatsController */],
+  providers: [HelloService /**CatService */],
+})
+export class AppModule {}
+```
+
+### 应用中间件
+- 中间件不能在 `@Module()` 装饰器中列出.
+- 我们必须使用模块类的 `configure() `方法来设置它们. 包含中间件的模块必须实现 `NestModule` 接口.我们将 `LoggerMiddleware` 设置在 `ApplicationModule` 层上.
+
+
+
+### 函数式中间件
+```ts
+import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Request, Response, NextFunction } from 'express';
+
+@Injectable()
+export class LoggerMiddleware implements NestMiddleware {
+  use(req: Request, res: Response, next: NextFunction) {
+    console.info('Middleware output:', req.url);
+    next();
+  }
+}
+```
+- 我们使用的 `LoggerMiddleware` 类非常简单.
+- 它没有成员, 没有额外的方法, 没有依赖关系.为什么我们不能只使用一个简单的函数？这是一个很好的问题, 因为事实上 - 我们可以做到.这种类型的中间件称为函数式中间件.让我们把 logger 转换成函数.
+```ts
+export function logger(req, res, next) {
+  console.log(`Request...`);
+  next();
+};
+```
+
+### 全局中间件
+- 如果我们想一次性将中间件绑定到每个注册路由, 我们可以使用由 `INestApplication` 实例提供的 `use()` 方法
