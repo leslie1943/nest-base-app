@@ -10,7 +10,6 @@ export class CreateCatDto {
   readonly name: string;
   readonly age: number;
   readonly breed: string;
-  // readonly belong: string;
 }
 
 export class UpdateCatDto {
@@ -19,7 +18,7 @@ export class UpdateCatDto {
   readonly breed: string;
 }
 
-export class ListAllEntities {
+export class QueryCatParams {
   readonly name: string;
   readonly limit: number;
   readonly offset: number;

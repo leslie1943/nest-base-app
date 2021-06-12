@@ -1,20 +1,7 @@
-import {
-  Controller,
-  Get,
-  Query,
-  Post,
-  Body,
-  Put,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Query, Post, Body, Put, Param, Delete } from '@nestjs/common';
 import { Cat } from 'src/cats/interfaces/cat.interface';
 
-import {
-  CreateCatDto,
-  UpdateCatDto,
-  ListAllEntities,
-} from './dto/create-cat.dto';
+import { CreateCatDto, UpdateCatDto, QueryCatParams } from './dto/cat.dto';
 import { CatsService } from './cats.service';
 
 @Controller('cats')
@@ -33,7 +20,7 @@ export class CatsController {
   }
 
   @Get()
-  async findAll(@Query() query: ListAllEntities): Promise<Cat[]> {
+  async findAll(@Query() query: QueryCatParams): Promise<Cat[]> {
     console.info(query);
     return this.catsService.findCats();
   }
@@ -45,10 +32,7 @@ export class CatsController {
   }
 
   @Put(':name')
-  async update(
-    @Param('name') name: string,
-    @Body() updateInfo: UpdateCatDto,
-  ): Promise<void> {
+  async update(@Param('name') name: string, @Body() updateInfo: UpdateCatDto): Promise<void> {
     console.info(name);
     console.info(updateInfo);
     return this.catsService.update(name, updateInfo);
