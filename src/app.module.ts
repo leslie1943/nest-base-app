@@ -1,7 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 
-import { ConfigModule } from '@nestjs/config';
-
 // 💛💛💛 Test Modules
 import { HelloController } from './hello/hello.controller';
 import { HelloService } from './hello/hello.service';
