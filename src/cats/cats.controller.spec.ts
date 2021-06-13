@@ -14,12 +14,8 @@ describe('CatsController', () => {
   });
 
   describe('root', () => {
-    it('findOne case', () => {
-      expect(controller.findOne('tom')).toBeTruthy();
-    });
-
-    it('findOne case', () => {
-      expect(controller.findOne('tom')).toBeTruthy();
+    it('For jest case case', () => {
+      expect(controller.forJest()).toBe('Jest');
     });
   });
 });

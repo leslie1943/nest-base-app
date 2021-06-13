@@ -38,4 +38,9 @@ export class CatsController {
   async remove(@Param('id') id: string): Promise<void> {
     console.info(id);
   }
+
+  @Get()
+  async forJest() {
+    return 'Jest';
+  }
 }

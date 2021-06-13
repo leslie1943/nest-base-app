@@ -1,7 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 
-import { ConfigModule } from '@nestjs/config';
-
 // 💛💛💛 Test Modules
 import { HelloController } from './hello/hello.controller';
 import { HelloService } from './hello/hello.service';
@@ -14,14 +12,12 @@ import { LoggerMiddleware } from './middlewares/looger.middleware';
 import { TimerMiddleware } from './middlewares/timer.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { ormconfig } from './config/ormconfig';
-
 @Module({
   // import modules
   imports: [
     CatsModule, // 依赖注入Cats模块,使内部的路由生效
     // 开启数据库连接,并将 entity 写入数据库
-    TypeOrmModule.forRoot(ormconfig),
+    TypeOrmModule.forRoot(),
   ],
   // controllers
   controllers: [HelloController],
