@@ -17,4 +17,7 @@ export class Cat {
 
   @Column({ length: 100, nullable: true })
   breed: string;
+
+  @Column({ length: 50 })
+  company: string;
 }
