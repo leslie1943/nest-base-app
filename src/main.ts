@@ -19,9 +19,7 @@ async function bootstrap() {
   app.use(logger);
   // 我们仅启动了 HTTP 侦听器, 该侦听器使应用程序可以侦听入栈的 HTTP 请求
   await app.listen(3000, () => {
-    console.info(
-      cyanBright(`Application has been run at: http://localhost:3000`),
-    );
+    console.info(cyanBright(`Application has been run at: http://localhost:3000 or http://localhost:3000/cats`));
   });
 }
 bootstrap();
