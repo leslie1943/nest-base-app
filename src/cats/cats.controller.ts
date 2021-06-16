@@ -39,14 +39,22 @@ export class CatsController {
   }
 
   @Get()
-  async findAll(@Query() query: CatDto) {
+  async findAll(@Query() query: CatDto): Promise<Cat[]> {
     console.info(query);
-    return this.catRepository.findAllCat();
+    return this.catRepository.findAllCat(query);
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string): Promise<Cat> {
-    return this.catRepository.findById(id);
+  async findByIdR(@Param('id') id: string): Promise<Cat> {
+    return this.catRepository.findByIdThroughRepository(id);
+  }
+  @Get('/query-builder/:id')
+  async findByIdQ(@Param('id') id: string): Promise<Cat> {
+    return this.catRepository.findByIdThroughQueryBuilder(id);
+  }
+  @Get('/query-builder-fields/:id')
+  async findbyIdQFields(@Param('id') id: string): Promise<Cat> {
+    return this.catRepository.findDataWithNameAndAgeColumn(id);
   }
 
   @Put(':name')
