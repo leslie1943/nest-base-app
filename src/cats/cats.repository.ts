@@ -10,17 +10,62 @@ export class CatRepository extends Repository<Cat> {
     return await this.save(catDto);
   };
 
-  findAllCat = async () => {
-    return 'Hello Cat';
+  // ------------------------ Get Many start ------------------------ //
+
+  // ✅✅✅ OK
+  findAllCatThroughQueryBuilder = async (): Promise<Cat[]> => {
+    // 由于使用了 EntityRepository 的方式, this 已经指向了 Cat Entity,
+    // createQueryBuilder 的时候只需要给 这个 Entity 指定别名就可以了
+    return await this.createQueryBuilder('cat').getMany();
   };
 
-  findById = async (id: string): Promise<Cat> => {
-    return await this.createQueryBuilder()
-      .select('cat')
-      .from(Cat, 'cat') // EntityTarget, Alias
-      .where('cat.id=:id', { id })
-      .getOne();
+  /**
+   * 根据 query 参数动态拼接 sql
+   */
+  findAllCat = async (catDto: CatDto): Promise<Cat[]> => {
+    const query = this.createQueryBuilder('cat');
+
+    // /cats?name=Leslie的时候会触发 query 下列条件.
+    if (catDto.name) {
+      query.where('cat.name = :name', {
+        name: catDto.name,
+      });
+    }
+    // /cats?name=Leslie&id=1
+    if (catDto.id) {
+      query.andWhere('cat.id = :id', {
+        id: catDto.id,
+      });
+    }
+
+    console.info('query.getSql()', query.getSql());
+    return await query.getMany();
   };
+  // ------------------------ Get Many finish ------------------------ //
+
+  // ------------------------ Get One start ------------------------ //
+  findByIdThroughRepository = async (id: string): Promise<Cat> => {
+    return await this.findOne({
+      where: { id },
+    });
+  };
+
+  findByIdThroughQueryBuilder = async (id: string): Promise<Cat> => {
+    const query = this.createQueryBuilder('cat').where('cat.id = :id', {
+      id: id,
+    });
+    return await query.getOne();
+  };
+
+  findDataWithNameAndAgeColumn = async (id: string): Promise<Cat> => {
+    const query = this.createQueryBuilder('cat')
+      .select(['cat.name', 'cat.age'])
+      .where('cat.id = :id', {
+        id: id,
+      });
+    return await query.getOne();
+  };
+  // ------------------------ Get One finish ------------------------ //
 }
 
 @EntityRepository(CatRef)
