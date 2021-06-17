@@ -6,6 +6,8 @@ import { HelloService } from './hello/hello.service';
 
 // 💚💚💚 Business Module
 import { CatsModule } from './cats/cats.module';
+import { UsersModule } from './users/users.module';
+import { PhotosModule } from './photos/photos.module';
 
 // 🍉🍉🍉 Middleware Plugins
 import { LoggerMiddleware } from './middlewares/looger.middleware';
@@ -16,6 +18,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   // import modules
   imports: [
     CatsModule, // 依赖注入Cats模块,使内部的路由生效
+    UsersModule,
+    PhotosModule,
     // 开启数据库连接,并将 entity 写入数据库
     TypeOrmModule.forRoot(),
   ],
