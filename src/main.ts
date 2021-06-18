@@ -1,25 +1,39 @@
-/**
- * 应用程序的入口文件, 它使用核心函数 NestFactory 来创建应用程序的实例
- */
 import { NestFactory } from '@nestjs/core';
-// import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
-import { logger } from './middlewares/logger.middleware';
+// import { logger } from './middlewares/logger.middleware';
 import { cyanBright } from 'chalk';
+import * as fs from 'fs';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-// 引导应用程序的启动过程
+// launch app
 async function bootstrap() {
-  // 要创建一个 Nest 应用程序的实例, 使用 NestFactory 核心类
-  // NestFactory 暴露了一些静态方法用于创建应用的实例
-  // 其中 create 方法返回一个应用程序的对象, 该对象实现了 INestApplication 接口.该对象还提供了一组方法
-
-  // 默认情况下使用 @nestjs/platform-express 软件包.许多用户对 Express 都很满意.并且无需采取任何操作即可启用它
-  // const app = await NestFactory.create<NestExpressApplication>(AppModule); //
+  // application object
   const app = await NestFactory.create(AppModule);
-  app.use(logger);
-  // 我们仅启动了 HTTP 侦听器, 该侦听器使应用程序可以侦听入栈的 HTTP 请求
+
+  // swagger config
+  const options = new DocumentBuilder()
+    .setTitle('Leslie NestJS API')
+    .setDescription('NestJs API Endpoints')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, options);
+  fs.writeFileSync('./swagger-spec.json', JSON.stringify(document));
+  SwaggerModule.setup('api', app, document);
+  await app.init();
+
+  // middlewares
+  // app.use(logger);
+
+  // port
   await app.listen(3000, () => {
-    console.info(cyanBright(`Application has been run at: http://localhost:3000 or http://localhost:3000/cats`));
+    console.info(
+      cyanBright(
+        `Application has been run at:
+        Home    : http://localhost:3000/
+        Demos   : http://localhost:3000/cats
+        Swagger : http://localhost:3000/api`,
+      ),
+    );
   });
 }
 bootstrap();
