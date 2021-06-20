@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { /**MiddlewareConsumer, */ Module, NestModule } from '@nestjs/common';
 
 // 💛💛💛 Test Modules
 import { HelloController } from './hello/hello.controller';
@@ -11,8 +11,8 @@ import { PhotosModule } from './photos/photos.module';
 import { HeroesGameModule } from './heroes/heroes.module';
 
 // 🍉🍉🍉 Middleware Plugins
-import { LoggerMiddleware } from './middlewares/looger.middleware';
-import { TimerMiddleware } from './middlewares/timer.middleware';
+// import { LoggerMiddleware } from './middlewares/looger.middleware';
+// import { TimerMiddleware } from './middlewares/timer.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
@@ -31,7 +31,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   providers: [HelloService],
 })
 export class AppModule implements NestModule {
-  async configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware, TimerMiddleware).forRoutes('');
+  async configure(/** consumer: MiddlewareConsumer */) {
+    // consumer.apply(LoggerMiddleware, TimerMiddleware).forRoutes('');
   }
 }

@@ -58,3 +58,26 @@ killEnemy(enemyId: string) {
 
 ## 
 - 先走 XXXX-command 或者 XXXX-query , 再走对应的 XXXX-handler
+
+
+### Pricinple
+- Dto: 作用于 `参数`和`返回值`
+- impl: `接口类` 对后续操作参数的定义
+- handler: 通过 装饰器 `@CommandHandler` 连接 `controller` -> `impl` -> `handler`的 依赖注入
+
+
+### Process again
+- `controller`中, 根据 `CRUD` 的类型, 选择走[CommandBus]还是[QueryBus]
+- 一般情况下执行 `CommandBus` 的操作,会带有参数,而这个参数大多数情况下就是 `execute` 参数中的 `impl` `中类的constructor` 中定义的参数类型
+```ts
+// controller.js
+this.commandBus.execute(new CreateHeroCommand(hero));
+
+// /command/impl/create-hero.command.ts
+import { HeroDto } from '../../interfaces/create-hero-dto';
+export class CreateHeroCommand {
+  constructor(public readonly hero: HeroDto) {}
+}
+```
+- `CreateHeroCommand` 这个类会在 `/command/handler/create-hero.handler.ts` 中 被装饰器`@CommandHandler(CreateHeroCommand)`, 同时初始化 repository实例
+- 然后实现 接口类 `ICommandHandler`中的`execute()`方法, 并在内部调用`repository`的方法完成对数据的操作
