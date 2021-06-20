@@ -12,7 +12,6 @@ export class KillDragonHandler implements ICommandHandler<KillDragonCommand> {
 
   async execute(command: KillDragonCommand) {
     console.log(clc.greenBright('KillDragonCommand...'));
-
     const { heroId, dragonId } = command;
     const hero = this.publisher.mergeObjectContext(
       await this.repository.findOneById(+heroId),
