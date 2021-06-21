@@ -19,4 +19,19 @@ export class HeroRepository extends Repository<HeroEntity> {
   async createHero(hero: HeroDto) {
     return await this.save(hero);
   }
+
+  async deleteHero(id: string) {
+    const hero = await this.findOne(id);
+    if (hero) {
+      const delHero = await this.remove(hero);
+      console.info('delHero', delHero);
+      return delHero;
+    } else {
+      return {
+        status: -1,
+        success: false,
+        msg: 'Not found document!',
+      };
+    }
+  }
 }

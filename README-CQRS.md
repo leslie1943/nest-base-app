@@ -81,3 +81,8 @@ export class CreateHeroCommand {
 ```
 - `CreateHeroCommand` 这个类会在 `/command/handler/create-hero.handler.ts` 中 被装饰器`@CommandHandler(CreateHeroCommand)`, 同时初始化 repository实例
 - 然后实现 接口类 `ICommandHandler`中的`execute()`方法, 并在内部调用`repository`的方法完成对数据的操作
+
+
+### cli-colo rules
+- `handler`: `console.log(clc.greenBright('[command/handler]: xxx yyy handler'));`
+- `impl`: `console.log(clc.yellowBright('[command/impl]: aaa bbb command'));`
