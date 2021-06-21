@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
 import { KillDragonCommand } from './commands/impl/kill-dragon.command';
 import { CreateHeroCommand } from './commands/impl/create-hero.command';
+import { DeleteHeroCommand } from './commands/impl/delete-hero-command';
 import { GetHeroesQuery } from './queries/impl/get-heroes.query';
 
 import { KillDragonDto } from './interfaces/kill-dragon-dto.interface';
@@ -32,5 +33,10 @@ export class HeroesGameController {
     const resHero = await this.commandBus.execute(new CreateHeroCommand(hero));
     console.info('resHero::::', resHero);
     return resHero;
+  }
+
+  @Delete(':id')
+  async deleteHero(@Param('id') id: string) {
+    return this.commandBus.execute(new DeleteHeroCommand(id));
   }
 }
