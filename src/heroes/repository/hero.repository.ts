@@ -4,11 +4,15 @@ import { Hero as HeroEntity } from '../entity/heroes.entity';
 import { HeroDto } from '../interfaces/create-hero-dto';
 import { Hero } from '../models/hero.model';
 import { userHero } from './fixtures/user';
+import * as clc from 'cli-color';
+
 @Injectable()
 @EntityRepository(HeroEntity)
 export class HeroRepository extends Repository<HeroEntity> {
+  // offical example
   async findOneById(id: number): Promise<Hero> {
-    console.info('param id:', id);
+    console.log(clc.bgCyanBright('[repository] => parameter', id));
+    console.log(clc.bgCyanBright('[repository] => userHero', JSON.stringify(userHero)));
     return userHero;
   }
 
@@ -16,6 +20,7 @@ export class HeroRepository extends Repository<HeroEntity> {
     return [userHero];
   }
 
+  // DIY examples
   async createHero(hero: HeroDto) {
     return await this.save(hero);
   }
