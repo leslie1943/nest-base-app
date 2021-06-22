@@ -81,8 +81,25 @@ export class CreateHeroCommand {
 ```
 - `CreateHeroCommand` 这个类会在 `/command/handler/create-hero.handler.ts` 中 被装饰器`@CommandHandler(CreateHeroCommand)`, 同时初始化 repository实例
 - 然后实现 接口类 `ICommandHandler`中的`execute()`方法, 并在内部调用`repository`的方法完成对数据的操作
-
+- 并且在 `handler`里的`execute`方法中使用的参数在 `impl/xx-xx.command.ts`类的构造函数中声明, 如下两段代码所示
+```ts
+// handler.ts
+@CommandHandler(KillDragonCommand)
+export class KillDragonHandler implements ICommandHandler<KillDragonCommand> {
+  constructor(
+    private readonly repository: HeroRepository,
+  ) {}
+  async execute(command: KillDragonCommand) {
+    const { heroId, dragonId } = command;
+  }
+}
+// command.ts
+export class KillDragonCommand {
+  constructor(public readonly heroId: string, public readonly dragonId: string) {}
+}
+```
 
 ### cli-colo rules
 - `handler`: `console.log(clc.greenBright('[command/handler]: xxx yyy handler'));`
 - `impl`: `console.log(clc.yellowBright('[command/impl]: aaa bbb command'));`
+- `repository`: `console.log(clc.bgCyanBright('[repository] => parameter', id));`
