@@ -8,11 +8,13 @@ export class KillDragonHandler implements ICommandHandler<KillDragonCommand> {
   constructor(private readonly repository: HeroRepository) {}
 
   async execute(command: KillDragonCommand) {
+    // --- LOG
     console.log(clc.greenBright('[command/handler]: KillDragonCommand'));
 
     const { heroId, dragonId } = command;
     const hero = await this.repository.findOneById(+heroId);
 
+    // --- LOG
     console.log(clc.greenBright('[command/handler]: findOneById', JSON.stringify(hero)));
 
     hero.killEnemy(dragonId);
