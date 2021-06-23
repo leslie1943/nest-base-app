@@ -5,7 +5,7 @@ import * as clc from 'cli-color';
 // import { Hero } from './models/hero.model';
 
 import { KillDragonCommand } from './commands/impl/kill-dragon.command';
-// import { DropAncientItemCommand } from './commands/impl/drop-ancient-item.command';
+import { DropAncientItemCommand } from './commands/impl/drop-ancient-item.command';
 import { CreateHeroCommand } from './commands/impl/create-hero.command';
 import { DeleteHeroCommand } from './commands/impl/delete-hero-command';
 import { GetHeroesQuery } from './queries/impl/get-heroes.query';
@@ -20,34 +20,38 @@ export class HeroesGameController {
   // CUD: CommandBus
   @Post(':id/kill')
   async killDragon(@Param('id') id: string, @Body() dto: KillDragonDto) {
-    console.log(clc.bgBlueBright('[controller] => killDragon'));
+    console.log(clc.magentaBright(`[controller] => Start to perform [killDragon] activity`));
     return this.commandBus.execute(new KillDragonCommand(id, dto.dragonId));
   }
 
-  // TODO:
   // CUD: CommandBus
-  // @Post(':id/add')
-  // async dropItem(@Param('id') id: string, @Body() dto: KillDragonDto) {
-  //   console.log(clc.bgBlueBright('[controller] => killDragon'));
-  //   return this.commandBus.execute(new DropAncientItemCommand(id, dto.dragonId));
-  // }
-
-  // Read: QueryBus
-  @Get()
-  async findAll(): Promise<any[]> {
-    return this.queryBus.execute(new GetHeroesQuery());
+  @Post(':id/add-item')
+  async addItem(@Param('id') id: string, @Body() dto: KillDragonDto) {
+    console.log(clc.magentaBright(`[controller] => Start to perform addItem activity`));
+    console.log(clc.magentaBright(`[controller] => addItem: id >>> ${id}, dragonId >>> ${dto.dragonId}`));
+    return this.commandBus.execute(new DropAncientItemCommand(id, dto.dragonId));
   }
 
   // CUD: CommandBus
   @Post()
   async createHero(@Body() hero: HeroDto): Promise<HeroDto> {
-    const resHero = await this.commandBus.execute(new CreateHeroCommand(hero));
-    console.info('resHero::::', resHero);
-    return resHero;
+    console.log(clc.magentaBright(`[controller] => Start to perform [createHero] activity`));
+    const newHero = await this.commandBus.execute(new CreateHeroCommand(hero));
+    console.log(clc.magentaBright(`[controller] => addItem: hero >>> ${JSON.stringify(hero)}`));
+    return newHero;
   }
 
+  // CUD: CommandBus
   @Delete(':id')
   async deleteHero(@Param('id') id: string) {
+    console.log(clc.magentaBright(`[controller] => Start to perform [deleteHero] activity`));
     return this.commandBus.execute(new DeleteHeroCommand(id));
+  }
+
+  // Read: QueryBus
+  @Get()
+  async findAll(): Promise<any[]> {
+  console.log(clc.magentaBright(`[controller] => Start to perform [findAll] activity`));
+    return this.queryBus.execute(new GetHeroesQuery());
   }
 }

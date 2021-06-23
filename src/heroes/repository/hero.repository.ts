@@ -29,7 +29,7 @@ export class HeroRepository extends Repository<HeroEntity> {
     const hero = await this.findOne(id);
     if (hero) {
       const delHero = await this.remove(hero);
-      console.info('delHero', delHero);
+      console.log(clc.bgCyanBright('[repository] => deleteHero', JSON.stringify(delHero)));
       return delHero;
     } else {
       return {

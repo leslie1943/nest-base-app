@@ -10,15 +10,15 @@ export class Hero extends AggregateRoot {
   }
 
   killEnemy(enemyId: string) {
-    console.log(clc.redBright('[models]: Trigger killEnemy and enemyId', enemyId));
-
+    console.log(clc.redBright('[models:::Hero class]: Trigger killEnemy', enemyId));
+    // TODO:
     // logic
     // this.apply(new HeroKilledDragonEvent(this.id, enemyId));
   }
 
   addItem(itemId: string) {
-    console.log(clc.redBright('[models]: Trigger killEnemy and itemId', itemId));
-
+    console.log(clc.redBright('[models:::Hero class]: Trigger addItem', itemId));
+    // TODO:
     // logic
     // this.apply(new HeroFoundItemEvent(this.id, itemId));
   }
