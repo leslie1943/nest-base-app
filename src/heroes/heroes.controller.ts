@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus, EventBus } from '@nestjs/cqrs';
 import * as clc from 'cli-color';
 
 // import { Hero } from './models/hero.model';
@@ -10,12 +10,18 @@ import { CreateHeroCommand } from './commands/impl/create-hero.command';
 import { DeleteHeroCommand } from './commands/impl/delete-hero-command';
 import { GetHeroesQuery } from './queries/impl/get-heroes.query';
 
+import { HeroSlayDragonEvent } from './events/impl/hero-slay-dragon.event';
+
 import { KillDragonDto } from './interfaces/kill-dragon-dto.interface';
 import { HeroDto } from './interfaces/create-hero-dto';
 
 @Controller('heros')
 export class HeroesGameController {
-  constructor(private readonly commandBus: CommandBus, private readonly queryBus: QueryBus) {}
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+    private readonly eventBus: EventBus,
+  ) {}
 
   // CUD: CommandBus
   @Post(':id/kill')
@@ -24,11 +30,19 @@ export class HeroesGameController {
     return this.commandBus.execute(new KillDragonCommand(id, dto.dragonId));
   }
 
+  @Post(':id/slay')
+  async slayDragon(@Param('id') id: string, @Body() dto: KillDragonDto) {
+    console.log(clc.magentaBright(`[controller] => Start to perform [slayDragon] activity`));
+    return this.eventBus.publish(new HeroSlayDragonEvent(id, dto.dragonId));
+  }
+
   // CUD: CommandBus
   @Post(':id/add-item')
   async addItem(@Param('id') id: string, @Body() dto: KillDragonDto) {
     console.log(clc.magentaBright(`[controller] => Start to perform addItem activity`));
-    console.log(clc.magentaBright(`[controller] => addItem: id >>> ${id}, dragonId >>> ${dto.dragonId}`));
+    console.log(
+      clc.magentaBright(`[controller] => addItem: id >>> ${id}, dragonId >>> ${dto.dragonId}`),
+    );
     return this.commandBus.execute(new DropAncientItemCommand(id, dto.dragonId));
   }
 
@@ -51,7 +65,7 @@ export class HeroesGameController {
   // Read: QueryBus
   @Get()
   async findAll(): Promise<any[]> {
-  console.log(clc.magentaBright(`[controller] => Start to perform [findAll] activity`));
+    console.log(clc.magentaBright(`[controller] => Start to perform [findAll] activity`));
     return this.queryBus.execute(new GetHeroesQuery());
   }
 }
