@@ -4,7 +4,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // handlers
 import { CommandHandlers } from './commands/handlers';
-// import { EventHandlers } from './events/handlers';
+import { EventHandlers } from './events/handlers';
 import { QueryHandlers } from './queries/handlers';
 // controller
 import { HeroesGameController } from './heroes.controller';
@@ -18,6 +18,6 @@ import { HeroRepository } from './repository/hero.repository';
 @Module({
   imports: [CqrsModule, TypeOrmModule.forFeature([Hero, HeroRepository])],
   controllers: [HeroesGameController],
-  providers: [...CommandHandlers, ...QueryHandlers] /** ...EventHandlers, HeroesGameSagas */,
+  providers: [...CommandHandlers, ...QueryHandlers, ...EventHandlers] /** HeroesGameSagas */,
 })
 export class HeroesGameModule {}
