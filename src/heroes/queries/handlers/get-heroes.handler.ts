@@ -10,6 +10,6 @@ export class GetHeroesHandler implements IQueryHandler<GetHeroesQuery> {
   async execute(query: GetHeroesQuery) {
     console.log(clc.blueBright('[queries handlers]: execute methods has been invoked.'));
     console.log(clc.yellowBright(JSON.stringify(query)));
-    return this.repository.findAll();
+    return this.repository.findAllHeros();
   }
 }

@@ -9,18 +9,17 @@ import * as clc from 'cli-color';
 @Injectable()
 @EntityRepository(HeroEntity)
 export class HeroRepository extends Repository<HeroEntity> {
-  // offical example
   async findOneById(id: number): Promise<Hero> {
-    console.log(clc.bgCyanBright('[repository] => parameter', id));
-    console.log(clc.bgCyanBright('[repository] => userHero', JSON.stringify(userHero)));
+    console.log(clc.redBright('[repository] => parameter', id));
+    console.log(clc.redBright('[repository] => userHero', JSON.stringify(userHero)));
     return userHero;
   }
 
-  async findAll(): Promise<Hero[]> {
-    return [userHero];
+  async findAllHeros(): Promise<HeroDto[]> {
+    const query = this.createQueryBuilder('hero');
+    return await query.getMany();
   }
 
-  // DIY examples
   async createHero(hero: HeroDto) {
     return await this.save(hero);
   }
@@ -29,7 +28,7 @@ export class HeroRepository extends Repository<HeroEntity> {
     const hero = await this.findOne(id);
     if (hero) {
       const delHero = await this.remove(hero);
-      console.log(clc.bgCyanBright('[repository] => deleteHero', JSON.stringify(delHero)));
+      console.log(clc.redBright('[repository] => deleteHero', JSON.stringify(delHero)));
       return delHero;
     } else {
       return {
@@ -38,5 +37,11 @@ export class HeroRepository extends Repository<HeroEntity> {
         msg: 'Not found document!',
       };
     }
+  }
+
+  async findHero(dragonId: string, heroId: string) {
+    const hero = await this.findOne(+heroId);
+    console.log(clc.redBright('[repository] => findHero', JSON.stringify(hero)));
+    return hero;
   }
 }
