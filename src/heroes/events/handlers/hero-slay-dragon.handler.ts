@@ -12,11 +12,14 @@ export class HeroSlayDragonHandler implements IEventHandler<HeroSlayDragonEvent>
     console.log(clc.yellowBright(`[events/handler]: constructor function`));
   }
 
-  handle(event: HeroSlayDragonEvent) {
+  async handle(event: HeroSlayDragonEvent) {
     console.log(
       clc.yellowBright(
         `[events/handler]: kill dragon event >>> event params:${JSON.stringify(event)}`,
       ),
     );
+
+    const eventsHandler_hero = this.repository.findHero(event.dragonId, event.heroId);
+    return eventsHandler_hero;
   }
 }

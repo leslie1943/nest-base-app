@@ -33,7 +33,7 @@ export class HeroesGameController {
   @Post(':id/slay')
   async slayDragon(@Param('id') id: string, @Body() dto: KillDragonDto) {
     console.log(clc.magentaBright(`[controller] => Start to perform [slayDragon] activity`));
-    return this.eventBus.publish(new HeroSlayDragonEvent(id, dto.dragonId));
+    return await this.eventBus.publish(new HeroSlayDragonEvent(id, dto.dragonId));
   }
 
   // CUD: CommandBus
@@ -64,8 +64,15 @@ export class HeroesGameController {
 
   // Read: QueryBus
   @Get()
-  async findAll(): Promise<any[]> {
+  async findAll(): Promise<HeroDto[]> {
     console.log(clc.magentaBright(`[controller] => Start to perform [findAll] activity`));
+    return this.queryBus.execute(new GetHeroesQuery());
+  }
+
+  // TODO:
+  @Get()
+  async findHero(): Promise<any[]> {
+    // console.log(clc.magentaBright(`[controller] => Start to perform [findAll] activity`));
     return this.queryBus.execute(new GetHeroesQuery());
   }
 }
