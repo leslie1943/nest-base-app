@@ -31,6 +31,8 @@
 ### SQL: LEFT JOIN
 ```sql
 SELECT * FROM t_user a LEFT JOIN t_team b on a.user_team = b.team_id
+-- 等同于
+SELECT * FROM t_user a , t_team b on a.user_team = b.team_id(+);
 ```
 - `LEFT JOIN`: 左侧表 `t_user` 的数据都被查询出来.
 - `ON`: 关联条件 => 匹配条件: 对于 `LEFT JOIN` 右侧的表 `t_team` 满足匹配条件的显式右侧表的记录信息. 不满足匹配条件的显式右侧表对应字段的记录显式为 `NULL`
