@@ -1,5 +1,6 @@
 import { Controller, Get, Query, Post, Body, Put, Param, Delete } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PostAuthor } from './entity/post-author.entity';
 import { PostCategory } from './entity/post-category.entity';
 import { PostDetails } from './entity/post-detail.entity';
 import { PostImage } from './entity/post-image.entity';
@@ -13,19 +14,44 @@ export class Sample2PostController {
     private readonly postRepository: PostsRepository,
   ) {}
 
+  // POSTMAN-POST: http://localhost:3000/sample2_post
   @Post()
   async create(@Body() dto: any): Promise<any> {
     console.info('dto>>>>', dto);
+
+    // details.
     const details = new PostDetails();
     details.authorName = 'Umed';
     details.comment = 'about post';
     details.metadata = 'post,details,one-to-one';
 
+    // author
+    const author = new PostAuthor();
+    author.name = details.authorName;
+
     const post = new Posts();
     post.text = 'hello how are you?';
     post.title = 'hello';
     post.details = details;
+    post.author = author;
 
-    this.postRepository.createPost(post);
+    const newPost = await this.postRepository.createPost(post);
+    console.info('newPost', newPost);
+  }
+
+  // POSTMAN-GET: http://localhost:3000/sample2_post
+  @Get()
+  async findPosts(): Promise<any> {
+    const query = this.postRepository
+      .createQueryBuilder('post')
+      .where('post.title=:keyword')
+      .setParameter('keyword', 'hello');
+    const posts = await query.getMany();
+    const total = await query.getCount();
+
+    console.info('query.getSql()', query.getSql());
+    const result = { posts, total };
+
+    return result;
   }
 }

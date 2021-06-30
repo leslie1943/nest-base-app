@@ -29,8 +29,10 @@ export class Posts {
   @JoinColumn()
   details?: PostDetails;
 
-  // post has relation with details. cascade update here means if new PostDetail instance will be set to this relation
-  // it will be inserted automatically to the db when you save this Post entity
+  @OneToOne(() => PostAuthor, (author) => author.post, { cascade: true })
+  @JoinColumn()
+  author: PostAuthor;
+
   @OneToOne(() => PostImage, (image) => image.post, {
     cascade: ['update'],
   })
@@ -47,9 +49,4 @@ export class Posts {
   })
   @JoinColumn()
   information: PostInformation;
-
-  // post has relation with details. not cascades here. means cannot be persisted, updated or removed
-  @OneToOne(() => PostAuthor, (author) => author.post)
-  @JoinColumn()
-  author: PostAuthor;
 }
