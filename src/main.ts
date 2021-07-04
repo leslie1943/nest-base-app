@@ -5,10 +5,19 @@ import { cyanBright } from 'chalk';
 import * as fs from 'fs';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+import { ValidationPipe } from '@nestjs/common';
+
+import { useContainer } from 'class-validator';
+
 // launch app
 async function bootstrap() {
   // application object
   const app = await NestFactory.create(AppModule);
+
+  // 🏊‍♀️🏊‍♀️🏊‍♀️🏊‍♀️🏊‍♀️🏊‍♀️🏊‍♀️🏊‍♀️🏊‍♀️ 开启一个全局验证管道 🏊‍♀️🏊‍♀️🏊‍♀️🏊‍♀️🏊‍♀️🏊‍♀️🏊‍♀️🏊‍♀️🏊‍♀️
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   // swagger config
   const options = new DocumentBuilder()
@@ -19,6 +28,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   fs.writeFileSync('./swagger-spec.json', JSON.stringify(document));
   SwaggerModule.setup('api', app, document);
+
   await app.init();
 
   // middlewares

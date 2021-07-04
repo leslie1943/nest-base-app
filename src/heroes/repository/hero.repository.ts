@@ -44,4 +44,8 @@ export class HeroRepository extends Repository<HeroEntity> {
     console.log(clc.redBright('[repository] => findHero', JSON.stringify(hero)));
     return hero;
   }
+
+  async countById(id: number) {
+    return await this.count({ where: { id } });
+  }
 }

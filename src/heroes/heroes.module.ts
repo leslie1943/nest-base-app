@@ -14,10 +14,17 @@ import { Hero } from './entity/heroes.entity';
 import { HeroRepository } from './repository/hero.repository';
 // saga
 // import { HeroesGameSagas } from './sagas/heroes.sagas';
+// validator
+import { IsHeroIdExistConstraint } from './validators/is-hero-id-exist.constraint';
 
 @Module({
   imports: [CqrsModule, TypeOrmModule.forFeature([Hero, HeroRepository])],
   controllers: [HeroesGameController],
-  providers: [...CommandHandlers, ...QueryHandlers, ...EventHandlers] /** HeroesGameSagas */,
+  providers: [
+    ...CommandHandlers,
+    ...QueryHandlers,
+    ...EventHandlers,
+    IsHeroIdExistConstraint,
+  ] /** HeroesGameSagas */,
 })
 export class HeroesGameModule {}

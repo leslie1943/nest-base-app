@@ -14,6 +14,9 @@ import { HeroSlayDragonEvent } from './events/impl/hero-slay-dragon.event';
 
 import { KillDragonDto } from './interfaces/kill-dragon-dto.interface';
 import { HeroDto } from './interfaces/create-hero-dto';
+import { GetHeroeQuery } from './queries/impl/get-hero.query';
+import { HeroQueryParam } from './interfaces/hero-param-dto';
+// import { HeroParamsSimple } from './validators/hero-param-simple.constraint';
 
 @Controller('heros')
 export class HeroesGameController {
@@ -69,10 +72,9 @@ export class HeroesGameController {
     return this.queryBus.execute(new GetHeroesQuery());
   }
 
-  // TODO:
-  @Get()
-  async findHero(): Promise<any[]> {
-    // console.log(clc.magentaBright(`[controller] => Start to perform [findAll] activity`));
-    return this.queryBus.execute(new GetHeroesQuery());
+  @Get(':id')
+  async findHero(@Param() { id }: HeroQueryParam): Promise<any[]> {
+    console.info('id', id);
+    return this.queryBus.execute(new GetHeroeQuery(id));
   }
 }

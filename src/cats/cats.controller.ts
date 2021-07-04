@@ -1,17 +1,10 @@
-import {
-  Controller,
-  Get,
-  Query,
-  Post,
-  Body,
-  Put,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Query, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { ApiParam } from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CatDto } from 'src/cats/interfaces/cats.dto';
 import { Cat } from './cats.entity';
 import { CatRepository, CatRefRepository } from './cats.repository';
+
 @Controller('cats')
 export class CatsController {
   /**
@@ -45,11 +38,13 @@ export class CatsController {
   }
 
   @Get(':id')
-  async findByIdR(@Param('id') id: string): Promise<Cat> {
+  @ApiParam({ name: 'id', required: true })
+  async findByIdR(@Param() id: string): Promise<Cat> {
     return this.catRepository.findByIdThroughRepository(id);
   }
   @Get('/query-builder/:id')
-  async findByIdQ(@Param('id') id: string): Promise<Cat> {
+  @ApiParam({ name: 'id', required: true })
+  async findByIdQ(@Param() id: string): Promise<Cat> {
     return this.catRepository.findByIdThroughQueryBuilder(id);
   }
   @Get('/query-builder-fields/:id')
@@ -58,10 +53,7 @@ export class CatsController {
   }
 
   @Put(':name')
-  async update(
-    @Param('name') name: string,
-    @Body() updateInfo: CatDto,
-  ): Promise<void> {
+  async update(@Param('name') name: string, @Body() updateInfo: CatDto): Promise<void> {
     console.info(name);
     console.info(updateInfo);
   }
