@@ -11,6 +11,7 @@ import { PhotosModule } from './photos/photos.module';
 import { HeroesGameModule } from './heroes/heroes.module';
 import { Sample2PostModule } from './sample-2-post/sample-2-post.module';
 import { Sample3PostModule } from './sample-3-post/sample-3-post.module';
+import { RelationModule } from './relations/relation.module';
 
 // 🍉🍉🍉 Middleware Plugins
 // import { LoggerMiddleware } from './middlewares/looger.middleware';
@@ -26,6 +27,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     HeroesGameModule,
     Sample2PostModule,
     Sample3PostModule,
+    RelationModule,
     // 开启数据库连接,并将 entity 写入数据库
     TypeOrmModule.forRoot(),
   ],
