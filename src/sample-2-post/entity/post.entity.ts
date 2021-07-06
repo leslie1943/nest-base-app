@@ -31,6 +31,7 @@ export class Posts {
 
   @OneToOne(() => PostAuthor, (author) => author.post, { cascade: true })
   @JoinColumn()
+  // @JoinColumn({ name: 'post_author' })
   author: PostAuthor;
 
   @OneToOne(() => PostImage, (image) => image.post, {
