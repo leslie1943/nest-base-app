@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from 'src/users/users.repository';
 import { PhotoDto } from './interfaces/photos.dto';
@@ -24,5 +24,12 @@ export class PhotosController {
     await this.userREPO.createUser(user);
 
     return photo;
+  }
+
+  @Get('load')
+  async findPU(): Promise<any> {
+    const res = await this.photoREPO.findOne(2, { relations: ['user'] });
+    console.info('res', res);
+    return res;
   }
 }

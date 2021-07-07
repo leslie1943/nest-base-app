@@ -43,3 +43,16 @@ Join 列始终是对其他一些列的引用（使用外键）。 默认情况�
 @JoinColumn({ referencedColumnName: "name" })
 category: Category;
 该关系现在引用Category实体的name, 而不是id。 该关系的列名将变为categoryName
+
+
+### relations
+```ts
+@Get('load')
+async findPU() {
+  const res = await this.xxxRepository.findOne(2, { relations: ['user'] });
+  return res;
+}
+```
+- `relations`是指, 当前`xxxRepository`实例对应的`entity`中列名`Column`为`user`的列
+- http://localhost:3000/relations/load
+- http://localhost:3000/photos/load
