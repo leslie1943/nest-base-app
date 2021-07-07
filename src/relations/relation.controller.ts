@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RelationCategory } from './entity/relation-category.entity';
 import { RelationQuestion } from './entity/relation-question.entity';
@@ -53,6 +53,13 @@ export class RelationController {
     category.questions = [q1, q2];
 
     const res = await this.categoryRepository.createCategory(category);
+    return res;
+  }
+
+  @Get('load')
+  async queryRelation(): Promise<any> {
+    const res = await this.categoryRepository.findOne(2, { relations: ['questions'] });
+    console.info('res', res);
     return res;
   }
 }
