@@ -1,4 +1,12 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { PostCategory } from './post-category.entity';
 import { PostDetails } from './post-detail.entity';
 import { PostImage } from './post-image.entity';
@@ -50,4 +58,10 @@ export class Posts {
   })
   @JoinColumn()
   information: PostInformation;
+
+  @CreateDateColumn()
+  createdDate: Date;
+
+  @UpdateDateColumn()
+  updatedDate: Date;
 }

@@ -56,3 +56,22 @@ async findPU() {
 - `relations`是指, 当前`xxxRepository`实例对应的`entity`中列名`Column`为`user`的列
 - http://localhost:3000/relations/load
 - http://localhost:3000/photos/load
+
+### setParameters
+```ts
+ const posts = await this
+    .createQueryBuilder('post')
+    .where((qb: any) => {
+      const subQuery = qb
+          .subQuery()
+          .select('"tempTb".uuid')
+          .leftJoin('user', 'u', 'u.id = "tempTb".uuid')
+          .from(`( ${ userQb.getQuery()} )`, 'tempTb')
+          .setParameters(userQb.getParameters())
+          .where(`"tempTb".otype = 'user' AND u.status = :status`, { status: AccountStatus.Active })
+          .getQuery();
+      // tslint:disable-next-line:prefer-template
+      return 'post.user_id IN ' + subQuery;
+    }).getMany();
+    return posts
+```

@@ -1,10 +1,11 @@
-import { Controller, Get, Query, Post, Body, Put, Param, Delete } from '@nestjs/common';
+// Query,Put,Delete
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostAuthor } from './entity/post-author.entity';
-import { PostCategory } from './entity/post-category.entity';
+// import { PostCategory } from './entity/post-category.entity';
 import { PostDetails } from './entity/post-detail.entity';
-import { PostImage } from './entity/post-image.entity';
-import { PostMetadata } from './entity/post-meta.entity';
+// import { PostImage } from './entity/post-image.entity';
+// import { PostMetadata } from './entity/post-meta.entity';
 import { Posts } from './entity/post.entity';
 import { PostsRepository } from './posts.repository';
 @Controller('sample2_post')
@@ -51,7 +52,20 @@ export class Sample2PostController {
 
     console.info('query.getSql()', query.getSql());
     const result = { posts, total };
-
     return result;
+  }
+
+  @Post('update/:id')
+  async updatePost2(@Param('id') id: string, @Body() body: any): Promise<any> {
+    // console.info('body data', body);
+    // console.info('Param id', id);
+    // const query = this.postRepository.createQueryBuilder('post').where(`id=${id}`);
+    const query = this.postRepository
+      .createQueryBuilder('post')
+      .where('post.id=:id')
+      .setParameter('id', id);
+    const post = await query.getOne();
+    post.title = body.title;
+    return await this.postRepository.save(post);
   }
 }
